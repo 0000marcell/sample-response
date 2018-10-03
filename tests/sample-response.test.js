@@ -19,7 +19,7 @@ test('#sampleResponse-test-1', async function() {
 
   let fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
-  expect(fileData).toBe({ id: "testing" });
+  expect(fileData).toEqual({ id: "testing" });
 });
 
 test('#sampleResponse-test-2', function() {
@@ -81,5 +81,5 @@ test('#sampleResponse-test-3', function() {
     ]
   };
   let result = sampleResponse.formatResponse(inputData); 
-  expect(result).toBe(outputData);
+  expect(result).toEqual(outputData);
 });

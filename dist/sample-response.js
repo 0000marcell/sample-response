@@ -23,6 +23,8 @@ var sampleResponse = {
    * ex: { url: , headers {} }
   */
   getSampleResponse: function getSampleResponse(requestData, filePath) {
+    var _this = this;
+
     return new Promise(function (resolve, reject) {
       _request2.default.get(requestData, function (error, response, body) {
         if (error) {
@@ -31,10 +33,12 @@ var sampleResponse = {
           return;
         }
 
-        var data = body;
+        var data = _this.formatResponse(body);
+
+        console.log('%s', data);
 
         try {
-          _fsExtra2.default.writeFileSync(filePath, body);
+          _fsExtra2.default.writeFileSync(filePath, data);
           resolve('file written');
         } catch (e) {
           console.error('Writing the sample request failed with: ', e);
@@ -50,7 +54,7 @@ var sampleResponse = {
    * @param data {Object} // data object
   */
   formatResponse: function formatResponse(data) {
-    var _this = this;
+    var _this2 = this;
 
     var result = void 0;
     if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && data.length) {
@@ -62,7 +66,7 @@ var sampleResponse = {
     if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && !data.length) {
       result = {};
       Object.keys(data).forEach(function (key) {
-        result[key] = _this.formatResponse(data[key]);
+        result[key] = _this2.formatResponse(data[key]);
       });
     }
 

@@ -18,6 +18,8 @@ const sampleResponse = {
           }
 
           let data = this.formatResponse(body);
+
+          console.log('%s', data);
           
           try {
             fs.writeFileSync(filePath, data);
