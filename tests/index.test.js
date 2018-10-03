@@ -1,6 +1,6 @@
-const sampleResponse = require('../dist/index');
-const path = require('path');
-const fs = require('fs-extra');
+import sampleResponse from '../dist/index';
+import path from 'path';
+import fs from 'fs-extra';
 
 const filePath = `${__dirname}/result.txt`;
 
@@ -13,7 +13,9 @@ test('#index-test-1', async function() {
     url: 'http://localhost:3000/posts'
   };
 
-  let data = await sampleResponse.default.getSampleResponse(request, filePath);
+  console.log('sampleResponse: ', sampleResponse);
+
+  let data = await sampleResponse.getSampleResponse(request, filePath);
 
   let fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
