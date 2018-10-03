@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "npm run build && npm run json-server && jest",
-    "build": "rimraf dist/ && babel ./src --out-dir dist/",
+    "build": "rimraf dist/ && babel ./src --out-dir dist/ && babel ./tests --out-dir ./tests-build",
     "json-server": "json-server --watch db.json &"
   },
   "keywords": [],
