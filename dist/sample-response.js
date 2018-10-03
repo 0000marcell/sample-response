@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _fsExtra = require('fs-extra');
 
 var _fsExtra2 = _interopRequireDefault(_fsExtra);
@@ -29,6 +31,8 @@ var sampleResponse = {
           return;
         }
 
+        var data = body;
+
         try {
           _fsExtra2.default.writeFileSync(filePath, body);
           resolve('file written');
@@ -39,12 +43,30 @@ var sampleResponse = {
       });
     });
   },
-  testAsync: function testAsync() {
-    return new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve('file written');
-      }, 1000);
-    });
+
+  /**
+   * transform the resquest data, leave only the first
+   * element of arrays inside the request
+   * @param data {Object} // data object
+  */
+  formatResponse: function formatResponse(data) {
+    var _this = this;
+
+    var result = void 0;
+    if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && data.length) {
+      result = [];
+      result[0] = data[0];
+      result[0] = this.formatResponse(result[0]);
+    }
+
+    if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && !data.length) {
+      result = {};
+      Object.keys(data).forEach(function (key) {
+        result[key] = _this.formatResponse(data[key]);
+      });
+    }
+
+    return result || data;
   }
 };
 

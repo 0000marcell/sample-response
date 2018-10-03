@@ -1,8 +1,20 @@
 {
   "name": "sample-response",
-  "version": "1.0.0",
+  "keywords": [
+    "json-server",
+    "faker",
+    "mock",
+    "sample data"
+  ],
+  "author": "Marcell Monteiro Cruz",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "bin": "./src/sample-response.js",
+  "main": "./src/sample-response.js",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
   "jest": {
     "watchPathIgnorePatterns": [
       "<rootDir>/tests/mock"
@@ -10,12 +22,10 @@
     "verbose": false
   },
   "scripts": {
-    "test": "npm run build && npm run json-server && jest",
+    "test": "npm run build && npm run fake-server && jest --watch",
     "build": "rimraf dist/ && babel ./src --out-dir dist/",
-    "json-server": "json-server --watch db.json &"
+    "fake-server": "json-server db.js &"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^7.0.0",
@@ -26,6 +36,7 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^23.6.0",
     "babel-preset-es2015": "^6.24.1",
+    "faker": "^4.1.0",
     "jest": "^23.6.0",
     "json-server": "^0.14.0",
     "regenerator-runtime": "^0.12.1",

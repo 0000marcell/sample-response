@@ -16,9 +16,11 @@ const sampleResponse = {
             reject();
             return;
           }
+
+          let data = this.formatResponse(body);
           
           try {
-            fs.writeFileSync(filePath, body);
+            fs.writeFileSync(filePath, data);
             resolve('file written');
           } catch(e) {
             console
@@ -28,12 +30,27 @@ const sampleResponse = {
       });  
     });
   },
-  testAsync() {
-    return new Promise(function (resolve) {
-      setTimeout(function(){
-        resolve('file written');
-      }, 1000)  
-    });
+  /**
+   * transform the resquest data, leave only the first
+   * element of arrays inside the request
+   * @param data {Object} // data object
+  */
+  formatResponse(data) {
+    let result;
+    if(typeof data === 'object' && data.length) {
+      result = [];
+      result[0] = data[0];
+      result[0] = this.formatResponse(result[0]);
+    }
+
+    if(typeof data === 'object' && !data.length) {
+      result = {};
+      Object.keys(data).forEach((key) => {
+        result[key] = this.formatResponse(data[key]); 
+      });
+    }
+
+    return result || data;
   }
 }
 
