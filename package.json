@@ -22,8 +22,9 @@
     "verbose": false
   },
   "scripts": {
-    "test": "npm run build && npm run fake-server && jest --watch",
+    "test": "npm run build && npm run watch-build && npm run fake-server && jest --watch",
     "build": "rimraf dist/ && babel ./src --out-dir dist/",
+    "watch-build": "node compile-watch.js &",
     "fake-server": "json-server db.js &"
   },
   "license": "ISC",

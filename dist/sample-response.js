@@ -33,13 +33,13 @@ var sampleResponse = {
           return;
         }
 
+        if (typeof body === 'string') body = JSON.parse(body);
+
         var data = _this.formatResponse(body);
 
-        console.log('%s', data);
-
         try {
-          _fsExtra2.default.writeFileSync(filePath, data);
-          resolve('file written');
+          _fsExtra2.default.writeFileSync(filePath, JSON.stringify(data));
+          resolve('file written!');
         } catch (e) {
           console.error('Writing the sample request failed with: ', e);
           reject();

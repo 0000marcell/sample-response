@@ -17,13 +17,14 @@ const sampleResponse = {
             return;
           }
 
+          if(typeof body === 'string')
+            body = JSON.parse(body);
+
           let data = this.formatResponse(body);
 
-          console.log('%s', data);
-          
           try {
-            fs.writeFileSync(filePath, data);
-            resolve('file written');
+            fs.writeFileSync(filePath, JSON.stringify(data));
+            resolve('file written!');
           } catch(e) {
             console
               .error('Writing the sample request failed with: ', e);
