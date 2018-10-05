@@ -1,7 +1,35 @@
 import fs from 'fs-extra';
 import request from 'request';
+import JSON5 from 'json5';
 
 const sampleResponse = {
+  /**
+   * main function, loads the configuration file, get sample data, format it
+   * and write a compatible json-server db.json file
+   * @param config file path {String} // path to the configuration file 
+  */
+  async init(path, filePath) {
+    filePath = filePath || './db.js';
+    let config = this.loadConfig(path);
+    let resultObj = {};
+    for(const item of config.endPoints) {
+      console.log('inside loop!');
+      let data = await this.getSampleResponse(item.url);
+      resultObj[item.mapTo] = data;
+      console.log('returned data: ', data);
+    }
+    console.log('gonna write: ', resultObj);
+    fs.writeFileSync(filePath, JSON.stringify(resultObj));
+    console.log(`json-server db created at ${filePath}`);
+  },
+  /**
+   * load the configuration file
+   * @param file path {String} // path to the configuration file 
+  */
+  loadConfig(path) {
+    let fileData = fs.readFileSync(path, 'utf-8');
+    return JSON5.parse(fileData);
+  },
   /**
    * get sample response from end point 
    * @param request {Object} // request(lib) request object for a get
@@ -23,8 +51,8 @@ const sampleResponse = {
           let data = this.formatResponse(body);
 
           try {
-            fs.writeFileSync(filePath, JSON.stringify(data));
-            resolve('file written!');
+            //fs.writeFileSync(filePath, JSON.stringify(data));
+            resolve(data);
           } catch(e) {
             console
               .error('Writing the sample request failed with: ', e);
@@ -39,6 +67,7 @@ const sampleResponse = {
    * @param data {Object} // data object
   */
   formatResponse(data) {
+    if(!data) return data;
     let result;
     if(typeof data === 'object' && data.length) {
       result = [];

@@ -1,5 +1,5 @@
-var dbData = require('./db-data');
+const data = require('./db-data.js');
 
 module.exports = () => {
-  return dbData;
+  return data;
 }  

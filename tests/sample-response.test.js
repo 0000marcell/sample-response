@@ -4,9 +4,11 @@ import fs from 'fs-extra';
 import dbData from '../db-data';
 
 const filePath = `${__dirname}/result.txt`;
+const resultDbPath = `${__dirname}/test-db.js`;
 
 beforeEach(() => {
   fs.removeSync(filePath); 
+  fs.removeSync(resultDbPath); 
 });
 
 const outputData = [
@@ -22,16 +24,16 @@ const outputData = [
   }
 ];
 
+let url = 'http://localhost:3000/users';
+
 test('#sampleResponse-test-1', async function() {
   let request = {
-    url: 'http://localhost:3000/users'
+    url: url
   };
 
   let data = await sampleResponse.getSampleResponse(request, filePath);
 
-  let fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-  expect(fileData).toEqual(outputData);
+  expect(data).toEqual(outputData);
 });
 
 test('#sampleResponse-test-2', function() {
@@ -44,7 +46,86 @@ test('#sampleResponse-test-2', function() {
   expect(result).toEqual(outputData);
 });
 
-test('#sampleResponse-test-3', function() {
+test('formatResponse array #sampleResponse-test-3', function() {
   let result = sampleResponse.formatResponse(dbData.users); 
   expect(result).toEqual(outputData);
+});
+
+test('formatResponse object #sampleResponse-test-4', function() {
+  let sampleData = {
+    users: {
+      name: 'just a name',
+      values: [1, 2, 4],
+      types: [1, 2, 3]
+    },
+    posts: {
+    }
+  };
+
+  let outputData = {
+    users: {
+      name: 'just a name',
+      values: [1],
+      types: [1]
+    },
+    posts: {
+    }
+  };
+  let result = sampleResponse.formatResponse(sampleData); 
+  expect(result).toEqual(outputData);
+});
+
+test('formatResponse with null value #sampleResponse-test-5', function() {
+  let sampleData = {
+    users: {
+      name: null,
+      values: [1, 2, 4],
+      types: [1, 2, 3]
+    },
+    posts: {
+    }
+  };
+
+  let outputData = {
+    users: {
+      name: null,
+      values: [1],
+      types: [1]
+    },
+    posts: {
+    }
+  };
+  let result = sampleResponse.formatResponse(sampleData); 
+  expect(result).toEqual(outputData);
+});
+
+test('Load data from a configuration file #sampleResponse-test-6', function() {
+  let output = {
+    endPoints: [
+      {
+        url: 'http://localhost:3000/users',
+        mapTo: 'people'
+      },
+      {
+        url: 'http://localhost:3000/products', 
+        mapTo: 'items' 
+      }
+    ]
+  };
+
+  let result = sampleResponse.loadConfig(`${__dirname}/config.js`); 
+  expect(result).toEqual(output);
+});
+
+test('create a valid json-server db.json based on file configuration #sampleResponse-test-7', 
+  async function() {
+
+  let resultDB = {
+    people: dbData['users'],
+    items: dbData['products']
+  };
+
+  await sampleResponse.init(`${__dirname}/config.js`, resultDbPath); 
+  let fileData = fs.readFileSync(resultDbPath, 'utf-8');
+  expect(JSON.parse(fileData)).toEqual(resultDB);
 });

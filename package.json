@@ -17,7 +17,7 @@
   },
   "jest": {
     "watchPathIgnorePatterns": [
-      "<rootDir>/tests/mock"
+      "<rootDir>/tests"
     ],
     "verbose": false
   },
@@ -30,6 +30,7 @@
   "license": "ISC",
   "dependencies": {
     "fs-extra": "^7.0.0",
+    "json5": "^2.1.0",
     "request": "^2.88.0"
   },
   "devDependencies": {

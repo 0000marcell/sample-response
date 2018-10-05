@@ -1,0 +1,1 @@
+{"people":[{"id":1,"name":"name","products":[{"id":1,"name":"other-name"}]}],"items":[{"id":1,"name":"name"}]}

@@ -14,9 +14,64 @@ var _request = require('request');
 
 var _request2 = _interopRequireDefault(_request);
 
+var _json = require('json5');
+
+var _json2 = _interopRequireDefault(_json);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var sampleResponse = {
+  /**
+   * main function, loads the configuration file, get sample data, format it
+   * and write a compatible json-server db.json file
+   * @param config file path {String} // path to the configuration file 
+  */
+  init: async function init(path, filePath) {
+    filePath = filePath || './db.js';
+    var config = this.loadConfig(path);
+    var resultObj = {};
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = config.endPoints[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var item = _step.value;
+
+        console.log('inside loop!');
+        var data = await this.getSampleResponse(item.url);
+        resultObj[item.mapTo] = data;
+        console.log('returned data: ', data);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    console.log('gonna write: ', resultObj);
+    _fsExtra2.default.writeFileSync(filePath, JSON.stringify(resultObj));
+    console.log('json-server db created at ' + filePath);
+  },
+
+  /**
+   * load the configuration file
+   * @param file path {String} // path to the configuration file 
+  */
+  loadConfig: function loadConfig(path) {
+    var fileData = _fsExtra2.default.readFileSync(path, 'utf-8');
+    return _json2.default.parse(fileData);
+  },
+
   /**
    * get sample response from end point 
    * @param request {Object} // request(lib) request object for a get
@@ -38,8 +93,8 @@ var sampleResponse = {
         var data = _this.formatResponse(body);
 
         try {
-          _fsExtra2.default.writeFileSync(filePath, JSON.stringify(data));
-          resolve('file written!');
+          //fs.writeFileSync(filePath, JSON.stringify(data));
+          resolve(data);
         } catch (e) {
           console.error('Writing the sample request failed with: ', e);
           reject();
@@ -56,6 +111,7 @@ var sampleResponse = {
   formatResponse: function formatResponse(data) {
     var _this2 = this;
 
+    if (!data) return data;
     var result = void 0;
     if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && data.length) {
       result = [];

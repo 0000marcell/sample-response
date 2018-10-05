@@ -28,5 +28,15 @@ module.exports = {
         }
       ]
     }
+  ],
+  products: [
+    {
+      id: 1,
+      name: 'name'
+    },
+    {
+      id: 1,
+      name: 'name'
+    }
   ]
 };
