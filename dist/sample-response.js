@@ -38,10 +38,8 @@ var sampleResponse = {
       for (var _iterator = config.endPoints[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var item = _step.value;
 
-        console.log('inside loop!');
         var data = await this.getSampleResponse(item.url);
         resultObj[item.mapTo] = data;
-        console.log('returned data: ', data);
       }
     } catch (err) {
       _didIteratorError = true;
@@ -58,7 +56,6 @@ var sampleResponse = {
       }
     }
 
-    console.log('gonna write: ', resultObj);
     _fsExtra2.default.writeFileSync(filePath, JSON.stringify(resultObj));
     console.log('json-server db created at ' + filePath);
   },

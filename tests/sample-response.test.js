@@ -119,10 +119,12 @@ test('Load data from a configuration file #sampleResponse-test-6', function() {
 
 test('create a valid json-server db.json based on file configuration #sampleResponse-test-7', 
   async function() {
-
+  
+  let people = dbData['users'][0]; 
+  people.products = [people.products[0]]
   let resultDB = {
-    people: dbData['users'],
-    items: dbData['products']
+    people: [people],
+    items: [dbData['products'][0]]
   };
 
   await sampleResponse.init(`${__dirname}/config.js`, resultDbPath); 

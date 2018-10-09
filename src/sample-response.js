@@ -13,12 +13,9 @@ const sampleResponse = {
     let config = this.loadConfig(path);
     let resultObj = {};
     for(const item of config.endPoints) {
-      console.log('inside loop!');
       let data = await this.getSampleResponse(item.url);
       resultObj[item.mapTo] = data;
-      console.log('returned data: ', data);
     }
-    console.log('gonna write: ', resultObj);
     fs.writeFileSync(filePath, JSON.stringify(resultObj));
     console.log(`json-server db created at ${filePath}`);
   },
